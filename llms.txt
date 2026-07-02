@@ -1,0 +1,13 @@
+# pgxsinkit
+
+> pgxsinkit is an offline-first sync toolkit for the PostgreSQL -> ElectricSQL -> PGlite read path and the client -> write API -> PostgreSQL write path. The @pgxsinkit/* packages are the product; a demo app and an integration + performance harness prove and harden them. It targets engineers building local-first apps on Postgres/Supabase with Drizzle, Electric, and PGlite.
+
+## Documentation Sets
+
+- [Abridged documentation](https://pgxsinkit.github.io/llms-small.txt): a compact version of the documentation for pgxsinkit, with non-essential content removed
+- [Complete documentation](https://pgxsinkit.github.io/llms-full.txt): the full documentation for pgxsinkit
+
+## Notes
+
+- The complete documentation includes all content from the official documentation
+- The content is automatically generated from the same source as the official documentation
