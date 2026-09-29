@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pgxsinkit storage benchmarks</title>
+    <style>:root{--border:#d0d5dd;--muted:#667085;--bg-soft:#f7f8fa;--accent:#3538cd}*{box-sizing:border-box}body{color:#101828;max-width:72rem;margin:0 auto;padding:1.25rem;font-family:system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.45}h1{margin:0 0 .25rem;font-size:1.4rem}h2{border-bottom:1px solid var(--border);margin:1.75rem 0 .5rem;padding-bottom:.25rem;font-size:1.05rem}h3{margin:0 0 .25rem;font-size:1rem}p.lede{color:var(--muted);max-width:52rem;margin:0 0 1rem}.controls{background:var(--bg-soft);border:1px solid var(--border);border-radius:.5rem;flex-wrap:wrap;align-items:flex-start;gap:1.5rem;padding:.9rem 1rem;display:flex}.controls fieldset{border:none;margin:0;padding:0}.controls legend{text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin-bottom:.4rem;font-size:.8rem;font-weight:600}.opt{cursor:pointer;align-items:baseline;gap:.4rem;margin:.15rem 0;font-size:.9rem;display:flex}button{background:var(--accent);color:#fff;cursor:pointer;border:none;border-radius:.4rem;margin:1rem 0 .5rem;padding:.6rem 1.4rem;font-size:1rem;font-weight:600}button:disabled{opacity:.5;cursor:default}#envelope dl{grid-template-columns:max-content 1fr;gap:.15rem .9rem;margin:.5rem 0 0;font-size:.85rem;display:grid}#envelope dt{color:var(--muted)}#envelope dd{word-break:break-word;margin:0}#progress{color:#cfe1ff;white-space:pre-wrap;word-break:break-word;background:#0b1020;border-radius:.4rem;max-height:34vh;padding:.7rem;font-family:ui-monospace,SF Mono,Menlo,monospace;font-size:.8rem;overflow:auto}section.battery{margin:1.5rem 0}section.battery .tag{color:var(--muted);border:1px solid var(--border);vertical-align:middle;border-radius:1rem;padding:.05rem .5rem;font-size:.7rem;font-weight:500}p.desc{color:var(--muted);max-width:60rem;margin:.1rem 0 .5rem;font-size:.85rem}.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:34rem}th,td{border:1px solid var(--border);text-align:right;font-variant-numeric:tabular-nums;vertical-align:top;padding:.4rem .6rem}thead th{background:var(--bg-soft);text-align:right}thead th:first-child,td.rowlabel{text-align:left}td.rowlabel{font-weight:500}.detail{color:var(--muted);font-size:.78rem}.warn{color:#b54708;font-size:.75rem;font-style:italic}.muted{color:var(--muted);text-align:center}.unavailable{color:#b42318;text-align:center}#restore-notice{color:#93370d;background:#fffaeb;border:1px solid #fedf89;border-radius:.4rem;margin:1rem 0;padding:.6rem .8rem;font-size:.85rem}#sw-proof{border:1px solid var(--border);border-radius:.4rem;margin:1rem 0;padding:.6rem .8rem;font-size:.85rem}#sw-proof.sw-granted{color:#067647;background:#ecfdf3;border-color:#abefc6}#sw-proof.sw-denied{background:var(--bg-soft);color:var(--muted)}#sw-proof.sw-failed{color:#b42318;background:#fef3f2;border-color:#fecdca}#results-json{background:var(--bg-soft);border:1px solid var(--border);border-radius:.4rem;max-height:40vh;padding:.7rem;font-size:.78rem;overflow:auto}footer{color:var(--muted);border-top:1px solid var(--border);margin-top:2rem;padding-top:.75rem;font-size:.8rem}</style>
+    <script type="module" crossorigin src="/bench/assets/bench-CZYD0roo.js"></script>
+  </head>
+
+  <body>
+    <h1>pgxsinkit storage benchmarks</h1>
+    <p class="lede">
+      A wa-sqlite-style suite of timed SQL batteries across three pgwasm storage backends — <code>idb</code>, the
+      constant-four-handle <code>opfs-repacked</code> (per-cell dedicated worker), and <code>opfs-repacked-sw</code>:
+      the identical engine hosted directly in a SharedWorker, runnable only where the engine grants sync-access handles
+      there (WebKit) — the side-by-side hosting comparison. Durability is relaxed by default; flip the strict toggle to
+      measure per-commit flush cost. Open this page on a real device (iPhone/Safari) to gather the per-engine numbers —
+      nothing here needs a network.
+    </p>
+
+    <div class="controls">
+      <fieldset>
+        <legend>Batteries</legend>
+        <div id="battery-list"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Backends</legend>
+        <div id="backend-list"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Durability</legend>
+        <label class="opt"
+          ><input type="checkbox" id="strict-toggle" /><span>strict (non-matrix batteries)</span></label
+        >
+      </fieldset>
+    </div>
+
+    <button id="run" type="button">Run selected</button>
+
+    <div id="envelope"></div>
+
+    <div id="sw-proof" hidden></div>
+
+    <div id="restore-notice" hidden></div>
+
+    <h2>Progress</h2>
+    <pre id="progress"></pre>
+
+    <h2>Results</h2>
+    <div id="results-tables"></div>
+
+    <h2>Raw JSON</h2>
+    <pre id="results-json"></pre>
+
+    <footer>
+      Times in each cell are wall-clock for the whole step (worker thread, <code>performance.now()</code>). Per-op
+      batteries also show mean / p50 / p95 / max per operation. The final envelope is on
+      <code>window.__benchResults</code>; <code>?auto=1</code> runs everything on load. Results survive a page reload —
+      the latest envelope is mirrored to <code>sessionStorage</code> and restored behind a notice (iOS Safari may reload
+      the page under memory pressure). <code>?debug=1</code> turns on the engine's debug output in the console.
+    </footer>
+
+  </body>
+</html>
